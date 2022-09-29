@@ -1,0 +1,345 @@
+version: "3.1"
+
+services:
+  ##### Databases #####
+  mongodb:
+    image: bitnami/mongodb:4.0
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/bitnami
+  
+  pgdb:
+    image: postgres:14.0
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_USER: RCP
+      POSTGRES_DB: RCP
+    ports:
+      - 5432:5432
+    volumes: 
+      - pgdb_data:/var/lib/postgresql/data
+
+  ##### Endpoint Services #####
+  # openapi-mongodb:
+  #   image: localhost:15000/smartgym/backend-openapi-mongodb${OPENAPI_MONGODB_TAG}
+  #   build:
+  #     context: ./backend-openapi-mongodb
+  #     dockerfile: Dockerfile
+  #   # secrets:
+  #   #   - JWT_SECRET
+  #   #   - SMARTGYM_USER
+  #   #   - SMARTGYM_PASSWORD
+  #   # env_file:
+  #   #   - .env
+  #   ports:
+  #     - 22090:9090
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "50m"
+  #       max-file: "3"
+
+
+  ##### Listener Services #####
+  # machines-db-watcher:
+  #   image: localhost:15000/smartgym/backend-machines-db-watcher${MACHINES_DB_WATCHER_TAG}
+  #   build:
+  #     context: ./backend-machines-db-watcher
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 18010:8010
+  #   secrets:
+  #     - SMARTGYM_USER
+  #     - SMARTGYM_PASSWORD
+  #   depends_on:
+  #     - postgres
+
+  # stage-three-trigger:
+  #   image: localhost:15000/smartgym/backend-stage-three-trigger${STAGE_THREE_TRIGGER_TAG}
+  #   build:
+  #     context: ./backend-stage-three-trigger
+  #     dockerfile: Dockerfile
+  #   secrets:
+  #     - APIKey
+  #     - SMARTGYM_USER
+  #     - SMARTGYM_PASSWORD
+  #   depends_on:
+  #     - mongodb
+  #     - redis
+  #     - openapi-mongodb
+  #     - user-plans-api
+
+  # redis-watcher-user:
+  #   image: localhost:15000/smartgym/redis-watcher-user${REDIS_WATCHER_USER_TAG}
+  #   build:
+  #     context: ./backend-redis-watcher-user
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+
+  # redis-watcher-data-stream:
+  #   image: localhost:15000/smartgym/redis-watcher-data-stream${REDIS_WATCHER_DATA_STREAM_TAG}
+  #   build:
+  #     context: ./backend-redis-watcher-data-stream
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+
+  # redis-garbage-collector:
+  #   image: localhost:15000/smartgym/redis-garbage-collector${REDIS_GARBAGE_COLLECTOR_TAG}
+  #   build:
+  #     context: ./backend-redis-garbage-collector
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+  
+  # redis-key-subscription-service:
+  #   image: localhost:15000/smartgym/redis-key-subscription-service${REDIS_KEY_SUBSCRIPTION_SERVICE_TAG}
+  #   ports:
+  #     - 18080:8000
+  #   build:
+  #     context: ./backend-redis-key-subscription-service
+  #     dockerfile: Dockerfile
+
+
+  ##### 2-stage Ingestion Services #####  
+  # TODO: deprecate
+  # exercise-postman-service:
+  #   image: localhost:15000/smartgym/backend-exercise-postman-service${EXERCISE_POSTMAN_SERVICE_TAG}
+  #   build:
+  #     context: ./backend-exercise-postman-service
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+  
+  # TODO: deprecate
+  # celery-postman-service:
+  #   image: localhost:15000/smartgym/backend-celery-postman-service${CELERY_POSTMAN_SERVICE_TAG}
+  #   build:
+  #     context: ./backend-celery-postman-service
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+
+  # celery-streaming-postman:
+  #   image: localhost:15000/smartgym/backend-celery-streaming-postman${CELERY_STREAMING_POSTMAN_TAG}
+  #   build:
+  #     context: ./backend-celery-streaming-postman
+  #     dockerfile: Dockerfile
+  #   secrets:
+  #     - SMARTGYM_USER
+  #     - SMARTGYM_PASSWORD
+  #   depends_on:
+  #     - rabbitmq
+  #     - postgres
+
+  # celery-saving-postman:
+  #   image: localhost:15000/smartgym/backend-celery-saving-postman${CELERY_SAVING_POSTMAN_TAG}
+  #   build:
+  #     context: ./backend-celery-saving-postman
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+
+  # celery-processing-postman:
+  #   image: localhost:15000/smartgym/backend-celery-processing-postman${CELERY_PROCESSING_POSTMAN_TAG}
+  #   build:
+  #     context: ./backend-celery-processing-postman
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     - rabbitmq
+
+  # spinningbike-worker:
+  #   image: localhost:15000/smartgym/backend-spinningbike-worker${SPINNINGBIKE_WORKER_TAG}
+  #   deploy:
+  #     replicas: 1
+  #   build:
+  #     context: ./backend-spinningbike-worker
+  #     dockerfile: Dockerfile
+  #   secrets:
+  #     - APIKey
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+
+  # spinningbike-saving-worker:
+  #   image: localhost:15000/smartgym/backend-spinningbike-saving-worker${SPINNINGBIKE_SAVING_WORKER_TAG}
+  #   deploy:
+  #     replicas: 1
+  #   build:
+  #     context: ./backend-spinningbike-saving-worker
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   secrets:
+  #     - APIKey
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+  
+  ##### Post-processing Services #####  
+
+
+  ##### GUI Services #####
+
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+      # - ME_CONFIG_BASICAUTH_USERNAME_FILE=/run/secrets/SMARTGYM_USER
+      # - ME_CONFIG_BASICAUTH_PASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
+      # - ME_CONFIG_MONGODB_ADMINUSERNAME_FILE=/run/secrets/SMARTGYM_USER
+      # - ME_CONFIG_MONGODB_ADMINPASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
+    ports:
+      - 18082:8081
+    depends_on:
+      - mongodb
+    # volumes:
+    #   - ./wait-for-it.sh:/wait-for-it.sh
+    # command:
+    #   ["/wait-for-it.sh", "-t", "60", "mongodb:27017", "--", "node", "app"]
+    # secrets:
+    #   - SMARTGYM_USER
+    #   - SMARTGYM_PASSWORD
+  
+  # lower:
+  #   image: mher/flower:0.9.5
+  #   environment:
+  #     - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
+  #     - FLOWER_PORT=8888
+  #   ports:
+  #     - 8888:8888
+  #   depends_on:
+  #     - rabbitmqf
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+      - HTTP_USER=smartgym
+      - HTTP_PASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
+    ports:
+      - 18081:8081
+    depends_on:
+      - redis
+    secrets:
+      - SMARTGYM_PASSWORD
+
+  adminer:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: pgdb
+      ADMINER_DESIGN: nette
+    ports:
+      - 18000:8080
+
+      
+  ##### Others #####
+
+  # facilities-manager:
+  #   image: localhost:15000/smartgym/backend-facilities-manager${FACILITIES_MANAGER_TAG}
+  #   build:
+  #     context: ./backend-facilities-manager
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   secrets:
+  #     - ADMIN_APIKEY
+  #     - SMARTGYM_USER
+  #     - SMARTGYM_PASSWORD
+  #   depends_on:
+  #     - redis
+  #     - mongodb
+
+  # socketio:
+  #   image: localhost:15000/smartgym/backend-socketio${SOCKETIO_TAG}
+  #   build:
+  #     context: ./backend-socketio
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - redis
+
+  # rabbitmq:
+  #   image: bitnami/rabbitmq:latest
+  #   ports:
+  #     - 5673:5672
+  #   healthcheck:
+  #     test: rabbitmq-diagnostics -q ping
+  #     interval: 2s
+  #     timeout: 3s
+  #     retries: 30
+
+  redis:
+    image: bitnami/redis:5.0
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - 16379:6379
+    volumes:
+      - redis_data:/bitnami/redis/data
+    healthcheck:
+      test: redis-cli ping
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      
+  # mongodb:
+  #   image: localhost:15000/smartgym/backend-mongodb-proxy${MONGODB_PROXY_TAG}
+  #   build:
+  #     context: ./backend-mongodb-proxy
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   # healthcheck:
+  #   #   test: curl --fail -s http://localhost:18085/ready || exit 1
+  #   #   interval: 2s
+  #   #   timeout: 3s
+  #   #   retries: 30
+
+  # postgres:
+  #   image: localhost:15000/smartgym/backend-postgres-proxy${POSTGRES_PROXY_TAG}
+  #   build:
+  #     context: ./backend-postgres-proxy
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 18001:18085
+  #   env_file:
+  #     - .env
+    # healthcheck:
+    #   test: curl --fail -s http://localhost:18085/ready || exit 1
+    #   interval: 2s
+    #   timeout: 3s
+    #   retries: 30
+
+
+volumes:
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  pgdb_data:
+    driver: local
+
+
+secrets:
+  ADMIN_APIKEY:
+    external: true
+  JWT_SECRET:
+    external: true
+  APIKey:
+    external: true
+  SMARTGYM_USER:
+    external: true
+  SMARTGYM_PASSWORD:
+    external: true
+
