@@ -1,0 +1,27 @@
+{
+  "user_display_name": "john",
+  "user_gender": "Male",
+  "user_id": "123456",
+  "user_phone_no": "98765432",
+  "user_registered": 0,
+  "exercise_ended": 0,
+  "exercise_id": "1",
+  "exercise_location": "SmartGymInABox",
+  "exercise_machine_id": "cd44558bb2454746a9a7c6b8c1fd4716",
+  "exercise_name": "Rower",
+  "exercise_started": 0,
+  "exercise_type": "rower",
+  "exercise_summary": {},
+  "exercise_data": [
+    {
+      "cadence": 0,
+      "calories": 0,
+      "distance": 0,
+      "pace": 0,
+      "power": 0,
+      "strokes": 0,
+      "timestamp": 1664531930889,
+      "workoutTime": 0
+    }
+  ]
+}

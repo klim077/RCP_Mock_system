@@ -13,16 +13,16 @@ import requests
 
 from src import mongoapi2
 from models.account import validate_user
-import routes.twilio_services as otp_services
-from security.aes import encrypt, decrypt
-from security.jwt import (
-    generate_access_token,
-    generate_refresh_token,
-    decode_token,
-    refresh_tokens,
-    generate_anti_csrf_token
-)
-from security.scope import validate_scope
+# import routes.twilio_services as otp_services
+# from security.aes import encrypt, decrypt
+# from security.jwt import (
+#     generate_access_token,
+#     generate_refresh_token,
+#     decode_token,
+#     refresh_tokens,
+#     generate_anti_csrf_token
+# )
+# from security.scope import validate_scope
 
 
 # Constants
@@ -107,15 +107,15 @@ def is_truthy(query: str) -> bool:
     return False
 
 
-def is_mock() -> bool:
-    mock = os.environ['MOCK_TWILIO']
-    result = is_truthy(query=mock)
-    logger.debug(f'is_mock "{mock}" is {result}')
-    return result
+# def is_mock() -> bool:
+#     mock = os.environ['MOCK_TWILIO']
+#     result = is_truthy(query=mock)
+#     logger.debug(f'is_mock "{mock}" is {result}')
+#     return result
 
 
 # Sanity check
-logger.info(f'Sanity check: MOCK is {is_mock()}')
+# logger.info(f'Sanity check: MOCK is {is_mock()}')
 
 
 def basic_auth(username, password, required_scopes=None):
@@ -213,46 +213,6 @@ def activesg_id_token(token, required_scopes=None):
     return info
 
 
-def validate_otp(otp: str) -> bool:
-    # logger.debug(f'validate_otp {otp}')
-
-    otp_pattern = '^[0-9]{6}$'
-    pattern_check = re.match(otp_pattern, otp)
-
-    if not pattern_check:
-        return False
-
-    return True
-
-
-def otp_auth(otp, required_scopes=None):
-    # logger.debug(f'otp_auth {otp}')
-
-    if not validate_otp(otp=otp):
-        return None
-
-    body = connexion.request.json
-    phone_number = body['phone_number']
-
-    # Convert to E164
-    number = mongoapi2.validate_phone_number(
-        phone_number=phone_number,
-    )
-
-    otp_check = otp_services.verify_otp(
-        to=number,
-        code=otp,
-        mock=is_mock(),
-    )
-
-    if not otp_check == 'approved':
-        return None
-
-    info = {
-        'sub': phone_number
-    }
-
-    return info
 
 
 def api_key_auth(apikey, required_scopes=None):
@@ -634,30 +594,6 @@ def post_activesgids(body):
     # Create response
     response = {
         'activesg_id_token': payload
-    }
-
-    return response, 201
-
-
-def wearable_login(body):
-    '''Routes from POST /wearable/hpbWatch/login
-
-    Args:
-        body (dict): Request body
-    Returns:
-        JSON object containing ActiveSG ID token
-    '''
-    if 'peripheral_id' not in body.keys():
-        response = {
-            'ok': False,
-            'error': 'Bad request body',
-        }
-        return response, 400
-
-    activesg_id = mongoapi2.get_user_id_using_wearable(body['peripheral_id'])
-
-    response = {
-        'activesg_id': activesg_id
     }
 
     return response, 201

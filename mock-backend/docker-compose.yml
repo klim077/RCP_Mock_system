@@ -8,6 +8,9 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data:/bitnami
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=smartgym
+      - MONGO_INITDB_ROOT_PASSWORD=password
   
   pgdb:
     image: postgres:14.0
@@ -22,24 +25,24 @@ services:
       - pgdb_data:/var/lib/postgresql/data
 
   ##### Endpoint Services #####
-  # openapi-mongodb:
-  #   image: localhost:15000/smartgym/backend-openapi-mongodb${OPENAPI_MONGODB_TAG}
-  #   build:
-  #     context: ./backend-openapi-mongodb
-  #     dockerfile: Dockerfile
-  #   # secrets:
-  #   #   - JWT_SECRET
-  #   #   - SMARTGYM_USER
-  #   #   - SMARTGYM_PASSWORD
-  #   # env_file:
-  #   #   - .env
-  #   ports:
-  #     - 22090:9090
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "50m"
-  #       max-file: "3"
+  openapi-mongodb:
+    image: localhost:15000/smartgym/backend-openapi-mongodb${OPENAPI_MONGODB_TAG}
+    build:
+      context: ./backend-openapi-mongodb
+      dockerfile: Dockerfile
+    # secrets:
+    #   - JWT_SECRET
+    #   - SMARTGYM_USER
+    #   - SMARTGYM_PASSWORD
+    # env_file:
+    #   - .env
+    ports:
+      - 22090:9090
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
 
 
   ##### Listener Services #####
@@ -192,31 +195,31 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_MONGODB_PORT=27017
-      # - ME_CONFIG_BASICAUTH_USERNAME_FILE=/run/secrets/SMARTGYM_USER
-      # - ME_CONFIG_BASICAUTH_PASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
-      # - ME_CONFIG_MONGODB_ADMINUSERNAME_FILE=/run/secrets/SMARTGYM_USER
-      # - ME_CONFIG_MONGODB_ADMINPASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
+      - ME_CONFIG_BASICAUTH_USERNAME_FILE=smartgym
+      - ME_CONFIG_BASICAUTH_PASSWORD_FILE=password
+      - ME_CONFIG_MONGODB_ADMINUSERNAME_FILE=smartgym
+      - ME_CONFIG_MONGODB_ADMINPASSWORD_FILE=password
     ports:
       - 18082:8081
     depends_on:
       - mongodb
-    # volumes:
-    #   - ./wait-for-it.sh:/wait-for-it.sh
-    # command:
-    #   ["/wait-for-it.sh", "-t", "60", "mongodb:27017", "--", "node", "app"]
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command:
+      ["/wait-for-it.sh", "-t", "120", "mongodb:27017", "--", "node", "app"]
     # secrets:
     #   - SMARTGYM_USER
     #   - SMARTGYM_PASSWORD
   
-  # lower:
-  #   image: mher/flower:0.9.5
-  #   environment:
-  #     - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
-  #     - FLOWER_PORT=8888
-  #   ports:
-  #     - 8888:8888
-  #   depends_on:
-  #     - rabbitmqf
+  flower:
+    image: mher/flower:0.9.5
+    environment:
+      - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
+      - FLOWER_PORT=8888
+    ports:
+      - 8888:8888
+    depends_on:
+      - rabbitmq
 
   redis-commander:
     image: rediscommander/redis-commander:latest
@@ -257,25 +260,25 @@ services:
   #     - redis
   #     - mongodb
 
-  # socketio:
-  #   image: localhost:15000/smartgym/backend-socketio${SOCKETIO_TAG}
-  #   build:
-  #     context: ./backend-socketio
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 80:80
-  #   depends_on:
-  #     - redis
+  socketio:
+    image: localhost:15000/smartgym/backend-socketio${SOCKETIO_TAG}
+    build:
+      context: ./backend-socketio
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - redis
 
-  # rabbitmq:
-  #   image: bitnami/rabbitmq:latest
-  #   ports:
-  #     - 5673:5672
-  #   healthcheck:
-  #     test: rabbitmq-diagnostics -q ping
-  #     interval: 2s
-  #     timeout: 3s
-  #     retries: 30
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    ports:
+      - 5673:5672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 2s
+      timeout: 3s
+      retries: 30
 
   redis:
     image: bitnami/redis:5.0

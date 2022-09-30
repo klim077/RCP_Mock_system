@@ -1,0 +1,4 @@
+bail: false
+check-leaks: false
+reporter: 'spec'
+timeout: 2000

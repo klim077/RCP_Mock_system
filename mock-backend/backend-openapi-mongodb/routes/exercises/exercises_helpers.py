@@ -25,16 +25,16 @@ logger.addHandler(ch)
 logger.info('Logger ready')
 
 
-def get_secret(secret_name):
-    try:
-        with open(f'/run/secrets/{secret_name}', 'r') as secret_file:
-            return secret_file.read().splitlines()[0]
-    except IOError:
-        raise
+# def get_secret(secret_name):
+#     try:
+#         with open(f'/run/secrets/{secret_name}', 'r') as secret_file:
+#             return secret_file.read().splitlines()[0]
+#     except IOError:
+#         raise
 
 
-mongo_user = get_secret('SMARTGYM_USER')
-mongo_password = get_secret('SMARTGYM_PASSWORD')
+mongo_user = "smartgym"
+mongo_password = "password"
 
 mongo_ip = "mongodb"
 mongo_port = 27017
@@ -43,8 +43,8 @@ coll_exercise = "exercises"
 coll_users = "users"
 coll_bodymetrics = "bodymetrics"
 
-postgres_user = get_secret('SMARTGYM_USER')
-postgres_password = get_secret('SMARTGYM_PASSWORD')
+postgres_user = "postgres"
+postgres_password = "a"
 postgres_db = 'smartgym'
 postgres_ip = 'postgres'
 postgres_machines_table = 'machines'

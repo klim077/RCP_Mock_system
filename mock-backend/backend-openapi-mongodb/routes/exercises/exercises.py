@@ -1,7 +1,6 @@
 from src import mongoapi2
 
 from routes.exercises.exercises_helpers import * 
-from routes.exercises.recommendation_helpers import *
 from flask import Response
 from bson.json_util import dumps
 import json
@@ -58,7 +57,6 @@ def get_recommendation(
   
 
 def post(
-  user: str,
   body: dict
 ):
   """Routes POST /exercises
@@ -86,7 +84,6 @@ def post(
   return res
 
 def post_bodymetrics(
-  user: str,
   body: dict
 ):
   """Routes POST /bodyMetrics

@@ -159,40 +159,6 @@ def getUserExercises(
     return result, status_code
 
 
-def calculateUserCampaignStatus(
-    user: str,
-    userId: str
-):
-    """Routes /users/{userId}/calculateUserCampaignStatus
-
-    Args:
-      userId: Requested user id
-    Returns:
-      return user campaign status
-    """
-
-    print('calculateUserCampaignStatus', flush=True)
-
-    # Routing
-    result = mongoapi2.calculateUserCampaignStatus(user, userId)
-
-    # Convert to json
-    # result_json = dumps(result)
-
-    # Make status
-    if result:
-        status_code = 200
-    else:
-        status_code = 404
-
-    # Prepare response
-    # res = Response(
-    #     response=result_json,
-    #     status=status_code
-    # )
-
-    return result, status_code
-
 
 def getUserExerciseDetail(
     user: str,
@@ -240,50 +206,6 @@ def getUserExerciseDetail(
 
     return result, status_code
 
-
-def updateCampaignClaims(
-    user: str,
-    userId: str,
-    body: dict,
-):
-    """Routes /users/{userId}
-
-    Args:
-      user: Authenticated user
-      userId: Requested user id
-      body: User claims to update
-
-    Returns:
-      User information
-    """
-
-    # print(body)
-    result = {
-        'oritpass': '123123'
-    }
-
-    status_code = 200
-
-    print('updateCampaignClaims', flush=True)
-
-    # Routing
-    result = mongoapi2.update_user_claims(user, userId, 'user_claims', body)
-
-    # Get keys
-    keys = result.keys()
-
-    # Make status
-    if 'error' in keys:
-        if 'Bad' in result['error']:
-            status_code = 400
-        elif 'not found' in result['error']:
-            status_code = 404
-        else:
-            status_code = 401
-    else:
-        status_code = 200
-
-    return result, status_code
 
 def get_user_records(userId:str,  exercise_name='',):
 
