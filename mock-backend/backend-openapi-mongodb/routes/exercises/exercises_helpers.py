@@ -43,10 +43,10 @@ coll_exercise = "exercises"
 coll_users = "users"
 coll_bodymetrics = "bodymetrics"
 
-postgres_user = "postgres"
+postgres_user = "RCP"
 postgres_password = "a"
-postgres_db = 'smartgym'
-postgres_ip = 'postgres'
+postgres_db = 'RCP'
+postgres_ip = 'pgdb'
 postgres_machines_table = 'machines'
 
 tz_sg = pytz.timezone("Singapore")

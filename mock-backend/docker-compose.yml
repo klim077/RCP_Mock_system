@@ -225,14 +225,14 @@ services:
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=local:redis:6379
-      - HTTP_USER=smartgym
-      - HTTP_PASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
+      # - HTTP_USER=smartgym
+      # - HTTP_PASSWORD_FILE=/run/secrets/SMARTGYM_PASSWORD
     ports:
       - 18081:8081
     depends_on:
       - redis
-    secrets:
-      - SMARTGYM_PASSWORD
+    # secrets:
+    #   - SMARTGYM_PASSWORD
 
   adminer:
     image: adminer
@@ -334,15 +334,15 @@ volumes:
     driver: local
 
 
-secrets:
-  ADMIN_APIKEY:
-    external: true
-  JWT_SECRET:
-    external: true
-  APIKey:
-    external: true
-  SMARTGYM_USER:
-    external: true
-  SMARTGYM_PASSWORD:
-    external: true
+# secrets:
+#   ADMIN_APIKEY:
+#     external: true
+#   JWT_SECRET:
+#     external: true
+#   APIKey:
+#     external: true
+#   SMARTGYM_USER:
+#     external: true
+#   SMARTGYM_PASSWORD:
+#     external: true
 
