@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|
+  # Require plugins
+  config.vagrant.plugins = [
+    "vagrant-reload",
+  ]
+
+  # Define machines
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "public_network"
+  config.vm.provider "virtualbox" do |v|
+    v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.memory = 4096
+  end
+
+  # Automatically start in /vagrant
+  config.ssh.extra_args = ["-t", "cd /vagrant; bash --login"]
+
+  config.vm.provision :ansible_local do |ansible|
+    ansible.galaxy_role_file = "requirements.yml"
+    ansible.playbook = "playbook.yml"
+  end
+
+  # Reload vm
+  config.vm.provision :reload
+end

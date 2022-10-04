@@ -1,0 +1,5 @@
+importlib_metadata<5
+redis
+requests
+pandas
+celery==5.2.3

@@ -1,0 +1,9 @@
+---
+# Vagrant creates [default] machines if a machine name is not provided in Vagrantfile
+- hosts: default
+  become: yes
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_users:
+          - vagrant

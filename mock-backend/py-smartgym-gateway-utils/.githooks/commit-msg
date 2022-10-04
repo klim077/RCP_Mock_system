@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ver=$(cat VERSION)
+sed -i "1s/^/[Build $ver] /" $1

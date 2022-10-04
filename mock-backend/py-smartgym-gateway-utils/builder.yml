@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  smartgym-utils:
+    image: smartgym-utils
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /packages:/packages
+    networks:
+      - pypi
+
+networks:
+  pypi: {}

@@ -1,0 +1,4 @@
+celery
+pika
+pymongo
+psycopg2

@@ -82,13 +82,13 @@ services:
   #   depends_on:
   #     - redis
 
-  # redis-watcher-data-stream:
-  #   image: localhost:15000/smartgym/redis-watcher-data-stream${REDIS_WATCHER_DATA_STREAM_TAG}
-  #   build:
-  #     context: ./backend-redis-watcher-data-stream
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - redis
+  redis-watcher-data-stream:
+    image: localhost:15000/smartgym/redis-watcher-data-stream${REDIS_WATCHER_DATA_STREAM_TAG}
+    build:
+      context: ./backend-redis-watcher-data-stream
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
 
   # redis-garbage-collector:
   #   image: localhost:15000/smartgym/redis-garbage-collector${REDIS_GARBAGE_COLLECTOR_TAG}
@@ -128,26 +128,26 @@ services:
   #     - redis
   #     - rabbitmq
 
-  # celery-streaming-postman:
-  #   image: localhost:15000/smartgym/backend-celery-streaming-postman${CELERY_STREAMING_POSTMAN_TAG}
-  #   build:
-  #     context: ./backend-celery-streaming-postman
-  #     dockerfile: Dockerfile
-  #   secrets:
-  #     - SMARTGYM_USER
-  #     - SMARTGYM_PASSWORD
-  #   depends_on:
-  #     - rabbitmq
-  #     - postgres
+  celery-streaming-postman:
+    image: localhost:15000/smartgym/backend-celery-streaming-postman${CELERY_STREAMING_POSTMAN_TAG}
+    build:
+      context: ./backend-celery-streaming-postman
+      dockerfile: Dockerfile
+    # secrets:
+    #   - SMARTGYM_USER
+    #   - SMARTGYM_PASSWORD
+    depends_on:
+      - rabbitmq
+      - pgdb
 
-  # celery-saving-postman:
-  #   image: localhost:15000/smartgym/backend-celery-saving-postman${CELERY_SAVING_POSTMAN_TAG}
-  #   build:
-  #     context: ./backend-celery-saving-postman
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - redis
-  #     - rabbitmq
+  celery-saving-postman:
+    image: localhost:15000/smartgym/backend-celery-saving-postman${CELERY_SAVING_POSTMAN_TAG}
+    build:
+      context: ./backend-celery-saving-postman
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - rabbitmq
 
   # celery-processing-postman:
   #   image: localhost:15000/smartgym/backend-celery-processing-postman${CELERY_PROCESSING_POSTMAN_TAG}
@@ -184,6 +184,34 @@ services:
   #   depends_on:
   #     - redis
   #     - rabbitmq
+
+  rower-worker:
+    image: localhost:15000/smartgym/backend-rower-worker${ROWER_WORKER_TAG}
+    deploy:
+      replicas: 1
+    build:
+      context: ./backend-rower-worker
+      dockerfile: Dockerfile
+    # secrets:
+    #   - APIKey
+    depends_on:
+      - redis
+      - rabbitmq
+
+  rower-saving-worker:
+    image: localhost:15000/smartgym/backend-rower-saving-worker${ROWER_SAVING_WORKER_TAG}
+    deploy:
+      replicas: 1
+    build:
+      context: ./backend-rower-saving-worker
+      dockerfile: Dockerfile
+      args:
+        - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+    # secrets:
+    #   - APIKey
+    depends_on:
+      - redis
+      - rabbitmq
   
   ##### Post-processing Services #####  
 
@@ -296,33 +324,6 @@ services:
       timeout: 3s
       retries: 30
       
-  # mongodb:
-  #   image: localhost:15000/smartgym/backend-mongodb-proxy${MONGODB_PROXY_TAG}
-  #   build:
-  #     context: ./backend-mongodb-proxy
-  #     dockerfile: Dockerfile
-  #   env_file:
-  #     - .env
-  #   # healthcheck:
-  #   #   test: curl --fail -s http://localhost:18085/ready || exit 1
-  #   #   interval: 2s
-  #   #   timeout: 3s
-  #   #   retries: 30
-
-  # postgres:
-  #   image: localhost:15000/smartgym/backend-postgres-proxy${POSTGRES_PROXY_TAG}
-  #   build:
-  #     context: ./backend-postgres-proxy
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 18001:18085
-  #   env_file:
-  #     - .env
-    # healthcheck:
-    #   test: curl --fail -s http://localhost:18085/ready || exit 1
-    #   interval: 2s
-    #   timeout: 3s
-    #   retries: 30
 
 
 volumes:

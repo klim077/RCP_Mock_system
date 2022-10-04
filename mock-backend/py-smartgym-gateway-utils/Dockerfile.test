@@ -1,0 +1,32 @@
+FROM python:latest
+
+# Pyenv dependencies
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update; apt-get install -y --no-install-recommends make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+
+# Install pyenv
+ENV PYENV_ROOT=/root/.pyenv
+RUN git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
+ENV PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+
+
+# Install tox
+RUN pip install tox
+
+
+# Install required python versions
+WORKDIR /app
+ARG python_versions="3.5.9 3.7.7 3.8.3"
+RUN for v in ${python_versions}; do pyenv install "$v"; done
+RUN pyenv local ${python_versions}
+
+
+# Cache pypi
+# COPY requirements.txt .
+# COPY tox.ini .
+# RUN tox || true
+
+
+# Copy the app
+COPY . .

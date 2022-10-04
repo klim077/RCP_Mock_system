@@ -1,0 +1,5 @@
+redis
+requests
+pandas
+celery
+pymongo==3.12.1

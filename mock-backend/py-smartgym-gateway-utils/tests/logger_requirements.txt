@@ -1,0 +1,2 @@
+celery
+git+https://git.siotgov.tech/SmartGym/py-smartgym-gateway-utils.git
