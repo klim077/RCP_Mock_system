@@ -43,7 +43,7 @@ coll_exercise = "exercises"
 coll_users = "users"
 coll_bodymetrics = "bodymetrics"
 
-postgres_user = "postgres"
+postgres_user = "RCP"
 postgres_password = "a"
 postgres_db = 'smartgym'
 postgres_ip = 'postgres'

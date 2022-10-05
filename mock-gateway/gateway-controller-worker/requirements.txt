@@ -1,0 +1,6 @@
+importlib_metadata<5
+requests
+celery
+# --extra-index-url http://${HOST_DOCKER_INTERNAL}:${LOCAL_PYPI_PORT}/simple/
+--trusted-host ${HOST_DOCKER_INTERNAL}
+# smartgymgatewayutils

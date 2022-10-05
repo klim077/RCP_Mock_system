@@ -29,7 +29,10 @@ app.conf.task_routes = {
     'campaign.#': {'queue': 'campaign_queue'},
 }
 
-app.control.add_consumer('rower_queue',destination=['worker1'], reply=True)
+app.control.add_consumer('rower_queue',
+# destination=['worker1'],
+destination=['celery@rowerWorker'],
+reply=True)
 
 def isUserIdSame(userID: str) -> str:
     global prev_userID
@@ -56,7 +59,8 @@ def rowerComputation(machineId):
 
         if isinstance(channelData, dict):
             rower_workout = rower.rowerCompute(channelData)
-            res = rowerUpdateRedisFromPostman(machineId, rower_workout)
+            logger.info(f'rower_workout: {rower_workout}')
+            res = rowerUpdateRedisFromPostman(machineId["machineId"], rower_workout)
             # logger.info(f'Update Redis enpoint call, result: {res}')
             logger.info(f'rower_workout: {rower_workout}')
 

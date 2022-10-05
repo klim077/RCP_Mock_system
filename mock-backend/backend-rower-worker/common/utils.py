@@ -115,6 +115,8 @@ def rowerUpdateRedisFromPostman(machineId, rower_dict):
 
     logger.info(f'posting to URL: {url}')
     print(f'posting to URL: {url}')
+    logger.info(f'rower_dict: {rower_dict}')
+    print(f'rower_dict: {rower_dict}')
 
     response = requests.post(
         url=url,

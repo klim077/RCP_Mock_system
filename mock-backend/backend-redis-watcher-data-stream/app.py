@@ -207,6 +207,7 @@ def publish_to_user(client: redis.Redis, machine: str):
     # logger.debug(machine)
 
     key = redis_user_template(machine=machine)
+    logger.info(f'key: {key}')
 
     client.publish(
         client.get(key),

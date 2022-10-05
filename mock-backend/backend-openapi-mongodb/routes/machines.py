@@ -617,12 +617,12 @@ def rowerUpdateRedis(machineId: str, body: dict):
             # "met": body["met"],
         }
 
-        r10 = xadd(
-            machineId,
-            "data_stream",
-            data,
-        )
-        logger.debug(f"Rower r10({r10[1]})")
+        # r10 = xadd(
+        #     machineId,
+        #     "data_stream",
+        #     data,
+        # )
+        # logger.debug(f"Rower r10({r10[1]})")
 
     except Exception as e:
         logger.error(f'Rower", {e}')
@@ -646,8 +646,8 @@ def rowerUpdateRedis(machineId: str, body: dict):
         + str(r8[1])
         + " "
         + str(r9[1])
-        + " "
-        + str(r10[1])
+        # + " "
+        # + str(r10[1])
         # + " "
         # + str(r_met_sum[1])
         # + " "
@@ -664,7 +664,7 @@ def rowerUpdateRedis(machineId: str, body: dict):
         & (r7[1] == 201)
         & (r8[1] == 201)
         & (r9[1] == 201)
-        & (r10[1] == 201)
+        # & (r10[1] == 201)
         # & (r_met_sum[1] == 201)
         # & (r_met_instant[1] == 201)
     ):
@@ -678,7 +678,7 @@ def rowerUpdateRedis(machineId: str, body: dict):
     return result, status_code
 
 
-def rowerUpdateRedisFromPostman(user: str, machineId: str, body: dict):
+def rowerUpdateRedisFromPostman(machineId: str, body: dict):
     """Routes /machines/{machineId}/rowerUpdateRedisFromPostman
 
      Args:

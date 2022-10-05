@@ -519,6 +519,79 @@ paths:
         # security:
         #   - ApiKeyAuth: []
         #   - jwt: []
+  /machines/{machineId}/rowerUpdateRedisFromPostman:
+    post:
+      tags:
+        - Machines
+      summary: Update distance, workoutTime, calories, strokes, power, cadence, pace and data_stream in updateRedis method in update_redis_3.py
+      description: Set distance, workoutTime, calories, strokes, power, cadence, pace and data_stream.
+      operationId: routes.machines.rowerUpdateRedisFromPostman
+      parameters:
+        - name: machineId
+          in: path
+          description: Machine Id
+          required: true
+          schema:
+            $ref: "#/components/schemas/DefaultString"
+      requestBody:
+        description: JSON values for the following {calories, weight, d_diff}
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  distance:
+                    type: number
+                    format: float
+                  cadence:
+                    type: number
+                    format: float
+                  calories:
+                    type: number
+                    format: float
+                  strokes:
+                    type: number
+                    format: float
+                  timestamp:
+                    type: number
+                    format: float
+                  workoutTime:
+                    type: number
+                    format: float
+                  pace:
+                    type: number
+                    format: float
+                  power:
+                    type: number
+                    format: float
+                  rec:
+                    $ref: "#/components/schemas/DefaultString"
+              required:
+                - distance
+                - cadence
+                - calories
+                - strokes
+                - timestamp
+                - workoutTime
+                - pace
+                - power
+                - rec
+      responses:
+        201:
+          description: Postman updated Redis with user exercise information
+          content: {}
+        400:
+          description: Bad request
+          content: {}
+        401:
+          description: Authorization error
+          content: {}
+        500:
+          description: Unexpected error
+          content: {}
+      # security:
+      #   - ApiKeyAuth: []
+      #   - jwt: []
 
   /exercises:
     post:

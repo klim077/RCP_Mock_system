@@ -50,7 +50,7 @@ logger.info('Logger ready')
 # postgres_ip = 'postgres'
 # postgres_machines_table = 'machines'
 
-postgres_user = "postgres"
+postgres_user = "RCP"
 postgres_password = "a"
 postgres_db = "RCP"
 postgres_ip = "pgdb"

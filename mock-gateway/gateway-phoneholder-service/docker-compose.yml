@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  phoneholder-service:
+    image: localhost:15000/smartgym/backend-phoneholder-service${PHONEHOLDER_SERVICE_TAG}
+    build:
+      context: ./backend-phoneholder-service
+      dockerfile: Dockerfile
+    ports:
+      - 16000:16000
+    
+  

@@ -25,7 +25,7 @@ streaming_consumer_pipelines = {
         "task":"weightstackComputation"
     },
     "rower":{
-        "queue": "rower_streaming_queue",
+        "queue": "rower_queue",
         "task":"rowerComputation"
     },
 }

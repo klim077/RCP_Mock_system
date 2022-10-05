@@ -69,7 +69,7 @@ mongo_user = "smartgym"
 mongo_password = "password"
 
 # Parameters
-postgres_user = "postgres"
+postgres_user = "RCP"
 postgres_pw = "a"
 postgres_db = "RCP"
 postgres_ip = "pgdb"

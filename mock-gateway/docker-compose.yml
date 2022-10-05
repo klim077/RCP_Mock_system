@@ -1,0 +1,359 @@
+version: "3.5"
+
+services:
+  http-worker:
+    image: localhost:15000/smartgym/gateway-http-worker${GATEWAY_CONTROLLER_WORKER_TAG}
+    deploy:
+      replicas: 1
+    build:
+      context: ./gateway-controller-worker
+      dockerfile: Dockerfile
+      args:
+        - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+        # - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+    # secrets:
+    #   - API_KEY
+    depends_on:
+      - redis
+      - rabbitmq
+
+  # gateway-machine-id-server:
+  #   image: ${HARBOR_URL}/smartgym/gateway-machine-id-server${MACHINE_ID_SERVER_TAG}
+  #   build:
+  #     context: ./gateway-machine-id-server
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 28090:28090
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # sidecar-machine-id-server:
+  #   image: ${HARBOR_URL}/smartgym/sidecar-consul-envoy
+  #   build:
+  #     context: ./sidecar-consul-envoy
+  #     dockerfile: Dockerfile
+  #   command: -sidecar-for machine_id_server -admin-bind localhost:29001
+  #   networks:
+  #     hostnet: {}
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # gateway-fov-server:
+  #   image: ${HARBOR_URL}/smartgym/gateway-fov-server${FOV_MONITORING_SERVER_TAG}
+  #   build:
+  #     context: ./gateway-fov-monitoring-server
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   ports:
+  #     - 11000:5000
+  #   depends_on:
+  #     - phoneholder-service
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # treadmill-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-treadmill-controller${TREADMILL_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-treadmill-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+
+  # bike-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-bike-controller${BIKE_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-bike-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #   - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+
+  rower-controller:
+    image: localhost:15000/smartgym/gateway-rower-controller${ROWER_CONTROLLER_TAG}
+    deploy:
+      replicas: 1
+    build:
+      context: ./gateway-rower-controller
+      dockerfile: Dockerfile
+      args:
+        - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+        # - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+    volumes:
+    - ./work/graylog:/certs
+    depends_on:
+      - mosquitto-bridge
+      - redis
+
+  # weightstack-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-weightstack-controller${WEIGHTSTACK_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-weightstack-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+
+  # weighingscale-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-weighingscale-controller${WEIGHINGSCALE_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-weighingscale-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+
+  # bodyweight-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-bodyweight-controller${BODYWEIGHT_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-bodyweight-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+  
+  # bpm-controller:
+  #   image: ${HARBOR_URL}/smartgym/gateway-bpm-controller${BPM_CONTROLLER_TAG}
+  #   deploy:
+  #     replicas: 0
+  #   build:
+  #     context: ./gateway-bpm-controller
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - mosquitto-bridge
+  #     - redis
+
+  # submitter:
+  #   image: ${HARBOR_URL}/smartgym/gateway-submitter${SUBMITTER_TAG}
+  #   build:
+  #     context: ./gateway-submitter
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - ./work/graylog:/certs
+  #   depends_on:
+  #     - redis
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # orchestrator:
+  #   image: ${HARBOR_URL}/smartgym/gateway-orchestrator${ORCHESTRATOR_TAG}
+  #   build:
+  #     context: ./gateway-orchestrator
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   volumes:
+  #     - "/usr/bin/docker:/usr/bin/docker"
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #     - ./work/graylog:/certs
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+  #   depends_on:
+  #     - redis
+
+  mosquitto:
+    image: eclipse-mosquitto:1.6
+    ports:
+      - 31883:8883
+    volumes:
+      - ./work/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./work/mosquitto/data:/mosquitto/data
+      - ./work/mosquitto/log:/mosquitto/log
+      - ./work/mosquitto/certs:/mosquitto/certs/
+      - ./work/graylog:/certs
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  mosquitto-bridge:
+    image: eclipse-mosquitto:1.6
+    volumes:
+      - ./work/mosquitto-bridge/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./work/mosquitto-bridge/data:/mosquitto/data
+      - ./work/mosquitto-bridge/log:/mosquitto/log
+      - ./work/mosquitto-bridge/certs:/mosquitto/certs/
+      - ./work/graylog:/certs
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  # rabbitmq:
+  #   image: bitnami/rabbitmq:latest
+  #   ports:
+  #     - 5673:5672
+
+  # flower:
+  #   image: mher/flower:0.9.5
+  #   environment:
+  #     - CELERY_BROKER_URL=amqp://user:bitnami@rabbitmq
+  #     - FLOWER_PORT=8888
+  #   ports:
+  #     - 8888:8888
+  #   depends_on:
+  #     - rabbitmq
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  redis:
+    image: "bitnami/redis:5.0"
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHALL
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "38081:8081"
+    depends_on:
+      - redis
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  # phoneholder-service:
+  #   image: ${HARBOR_URL}/smartgym/gateway-phoneholder-service${PHONEHOLDER_SERVICE_TAG}
+  #   build:
+  #     context: ./gateway-phoneholder-service
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   ports:
+  #     - 16000:16000
+  #   secrets:
+  #     - WEARABLE_AUTH_KEY
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+  #   healthcheck:
+  #     test: curl --fail -s http://localhost:16000/healthcheck || exit 1
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 45s
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # activesgid-auth:
+  #   image: ${HARBOR_URL}/smartgym/gateway-activesgid-auth${ACTIVESGID_AUTH_TAG}
+  #   build:
+  #     context: ./gateway-activesgid-auth
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   ports:
+  #     - 16001:16001
+  #   depends_on:
+  #     - redis
+  #     - rabbitmq
+  #   healthcheck:
+  #     test: curl --fail -s http://localhost:16001/healthcheck || exit 1
+  #     interval: 10s # shorter interval for critical service
+  #     timeout: 3s
+  #     retries: 5
+  #     start_period: 45s
+  #   deploy:
+  #     replicas: 2
+  #     placement:
+  #       constraints: [node.role == manager]
+
+  # leaderboard-service:
+  #   image: ${HARBOR_URL}/smartgym/gateway-leaderboard-service${LEADERBOARD_SERVICE_TAG}
+  #   build:
+  #     context: ./gateway-leaderboard-service
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   ports:
+  #     - 20000:20000
+  #   depends_on: 
+  #     - redis
+  #     - rabbitmq
+  
+  # leaderboard-app:
+  #   image: ${HARBOR_URL}/smartgym/gateway-leaderboard-app${LEADERBOARD_APP_TAG}
+  #   build:
+  #     context: ./gateway-leaderboard-app
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - HOST_DOCKER_INTERNAL=${HOST_DOCKER_INTERNAL}
+  #       - LOCAL_PYPI_PORT=${LOCAL_PYPI_PORT}
+  #   ports:
+  #     - 30000:80
+  #   depends_on: 
+  #     - leaderboard-service
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]
+
+# networks:
+#   hostnet:
+#     external: true
+#     name: host
+
+# secrets:
+#   API_KEY:
+#     external: true
+#   WEARABLE_AUTH_KEY:
+#     external: true

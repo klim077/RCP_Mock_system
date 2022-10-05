@@ -1,0 +1,11 @@
+importlib_metadata<5
+fastapi
+uvicorn==0.11.8
+pymongo
+python-multipart
+aiofiles
+requests
+# --extra-index-url http://${HOST_DOCKER_INTERNAL}:${LOCAL_PYPI_PORT}/simple/
+--trusted-host ${HOST_DOCKER_INTERNAL}
+# smartgymgatewayutils
+celery
