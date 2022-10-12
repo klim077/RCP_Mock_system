@@ -20,6 +20,12 @@ noPedalThres = 10       # n.o. of no pedal count to set pedalflag false
 
 delta_cranktime_thres = 5000
 
+''' for filtering to ensure data spikes are not recorded'''
+distanceFilterThres = 10
+caloriesFilterThres = 10
+strokesFilterThres = 10
+rowingTimeFilterThres = 1000
+
 '''for raw data from MQTT without processing'''
 class JetsonData:
 
@@ -143,11 +149,21 @@ class WorkoutProcessor:
 
             if (self.repeatflag == True):
                 return None
-            else: 
-                woDict = self.dataComputation()
-                self.throt_queue.append(woDict)
-                self.prev = copy.deepcopy(self.curr)
-                return woDict
+            # else: 
+            #     woDict = self.dataComputation()
+            #     self.throt_queue.append(woDict)
+            #     self.prev = copy.deepcopy(self.curr)
+            #     return woDict
+            else:
+                self.sensibleCheck = self.isCurrSensible()
+                if (self.sensibleCheck == False):
+                    return None
+                else:
+                    self.filterSpikes()
+                    woDict = self.dataComputation()
+                    self.throt_queue.append(woDict)
+                    self.prev = copy.deepcopy(self.curr)
+                    return woDict
 
         else:
             self.prev = copy.deepcopy(self.curr)
@@ -334,3 +350,23 @@ class WorkoutProcessor:
                 prevvalue = getattr(self.prev, name)
                 setattr(self.curr, name, prevvalue)
 
+    def isCurrSensible(self):
+        if (self.curr.distance >= self.prev.distance and
+            self.curr.calories >= self.prev.calories and 
+            self.curr.strokes >= self.prev.strokes and
+            self.curr.rowingTime >= self.prev.rowingTime
+            ):
+            return True
+        else:
+            return False
+        
+    def filterSpikes(self):
+        if (self.curr.distance - self.prev.distance)>=distanceFilterThres:
+            self.curr.distance = self.prev.distance
+        if (self.curr.calories - self.prev.calories)>=caloriesFilterThres:
+            self.curr.calories = self.prev.calories
+        if (self.curr.strokes - self.prev.strokes)>=strokesFilterThres:
+            self.curr.strokes = self.prev.strokes
+        if (self.curr.rowingTime - self.prev.rowingTime)>=rowingTimeFilterThres:
+            self.curr.rowingTime = self.prev.rowingTime
+        

@@ -91,7 +91,7 @@ def main():
         # mqttClient.publish(topic, message)
         # print('Published {message} to {topic}')
 
-        for i in range(0,3):
+        for i in range(3,6):
             integer = float(i)
             ret = {
             "cadence": integer+0.1,
