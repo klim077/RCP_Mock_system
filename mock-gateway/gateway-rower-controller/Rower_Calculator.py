@@ -130,6 +130,9 @@ class WorkoutProcessor:
 
         self.prev_ewa_cadence = 0
         self.noPedalCount = 0
+        
+        # Clean self.curr to ensure no None values
+        self.handleNoneValues()
 
         if self.prev is not None:
 
@@ -178,6 +181,9 @@ class WorkoutProcessor:
         if (self.curr.power > cadenceThres):
             self.pedalFlag = True
             self.noPedalCount = 0
+        # if (self.curr.rowingTime > self.prev.rowingTime):
+        #     self.pedalFlag = True
+        #     self.noPedalCount = 0
         else:
             self.noPedalCount += 1
 
@@ -317,3 +323,12 @@ class WorkoutProcessor:
         # print(f'timestamp: {timestamp}')
 
         return timestamp
+
+    def handleNoneValues(self):
+
+        attributes = [a for a in dir(self.curr) if not a.startswith('__') and not callable(getattr(self.curr, a))]
+        for i in attributes:
+            name = i
+            if (getattr(self.curr, name) == None):
+                setattr(self.curr, name, 0.00)
+

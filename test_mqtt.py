@@ -99,7 +99,7 @@ def main():
             "distance": integer+0.1,
             "pace": integer+0.1,
             "power": integer+0.1,
-            "strokes": integer+0.1,
+            "strokes": None,
             "timestamp": integer+0.1,
             "workoutTime": integer+0.1,
             "heartRate": integer+0.1,
