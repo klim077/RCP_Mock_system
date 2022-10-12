@@ -104,7 +104,7 @@ def main():
             "timestamp": integer+0.1,
             "workoutTime": integer+0.1,
             "heartRate": integer+0.1,
-            "rowingTime": integer+0.1,
+            "rowingTime": integer+3.1,
             "interval": integer+0.1
 
             }

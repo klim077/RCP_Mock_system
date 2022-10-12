@@ -140,6 +140,8 @@ class WorkoutProcessor:
         # Clean self.curr to ensure no None values
         self.handleNoneValues()
 
+        self.checkIfRestarted()
+
         if self.prev is not None:
 
             # check repeated curr from repeated MQTT msg
@@ -353,8 +355,7 @@ class WorkoutProcessor:
     def isCurrSensible(self):
         if (self.curr.distance >= self.prev.distance and
             self.curr.calories >= self.prev.calories and 
-            self.curr.strokes >= self.prev.strokes and
-            self.curr.rowingTime >= self.prev.rowingTime
+            self.curr.strokes >= self.prev.strokes
             ):
             return True
         else:
@@ -367,6 +368,8 @@ class WorkoutProcessor:
             self.curr.calories = self.prev.calories
         if (self.curr.strokes - self.prev.strokes)>=strokesFilterThres:
             self.curr.strokes = self.prev.strokes
-        if (self.curr.rowingTime - self.prev.rowingTime)>=rowingTimeFilterThres:
-            self.curr.rowingTime = self.prev.rowingTime
+
+    def checkIfRestarted(self):
+        if ((self.prev !=None) and (self.curr.rowingTime < self.prev.rowingTime)):
+            self.prev = None
         
