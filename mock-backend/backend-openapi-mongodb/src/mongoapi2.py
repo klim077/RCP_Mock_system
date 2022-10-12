@@ -424,6 +424,9 @@ def get_keyvalues(machineId: str):
         "strokes",
         "timestamp",
         "pace",
+        "rowingTime",
+        "heartRate",
+        "interval",
     ]
 
     # Sanitize inputs
@@ -534,6 +537,15 @@ def get_keyvalues(machineId: str):
     if out["pace"] != None:
         out["pace"] = float(out["pace"])
 
+    if out["rowingTime"] != None:
+        out["rowingTime"] = float(out["rowingTime"])
+
+    if out["heartRate"] != None:
+        out["heartRate"] = float(out["heartRate"])
+
+    if out["interval"] != None:
+        out["interval"] = float(out["interval"])
+
     return out
 
 
@@ -633,6 +645,18 @@ def set_key(machineId: str, key: str, body: dict):
         v = float(value)
     if key == "pace":
         k = f"{machineId}:pace"
+        v = float(value)
+    if key == "type":
+        k = f"{machineId}:type"
+        v = str(value)
+    if key == "rowingTime":
+        k = f"{machineId}:rowingTime"
+        v = float(value)
+    if key == "heartRate":
+        k = f"{machineId}:heartRate"
+        v = float(value)
+    if key == "interval":
+        k = f"{machineId}:interval"
         v = float(value)
 
     logger.debug(f"{k}, {v}")

@@ -235,7 +235,11 @@ def initialize_rower_with_user(machineId: str, body: dict):
     r9 = set_key(machineId, "workoutTime", {"value": 0.0})
     r10 = set_key(machineId, "pace", {"value": 0.0})
     r11 = set_key(machineId, "power", {"value": 0.0})
-    r12 = del_key(machineId, "data_stream")
+    r12 = set_key(machineId, "rowingTime", {"value": 0.0})
+    r13 = set_key(machineId, "heartRate", {"value": 0.0})
+    r14 = set_key(machineId, "interval", {"value": 0.0})
+    r15 = del_key(machineId, "data_stream")
+    r16 = set_key(machineId, "type", {"value": "rower"})
     #r_met_sum = set_key(user, machineId, "met_sum", {"value": 0.0})
     #r_met_instant = set_key(user, machineId, "met_instant", {"value": 0.0})
 
@@ -255,6 +259,10 @@ def initialize_rower_with_user(machineId: str, body: dict):
         & (r10[1] == 201)
         & (r11[1] == 201)
         & (r12[1] == 201)
+        & (r13[1] == 201)
+        & (r14[1] == 201)
+        & (r15[1] == 201)
+        & (r16[1] == 201)
         #& (r_met_sum[1] == 201)
         #& (r_met_instant[1] == 201)
     ):
@@ -571,15 +579,41 @@ def rowerUpdateRedis(machineId: str, body: dict):
         )
         logger.debug(f"Rower r8({r8[1]})")
 
-
         r9 = set_key(
+            machineId,
+            "rowingTime",
+            {
+                "value": body["rowingTime"],
+            },
+        )
+        logger.debug(f"Rower r9({r9[1]})")
+
+        r10 = set_key(
+            machineId,
+            "heartRate",
+            {
+                "value": body["heartRate"],
+            },
+        )
+        logger.debug(f"Rower r10({r10[1]})")
+
+        r11 = set_key(
+            machineId,
+            "interval",
+            {
+                "value": body["interval"],
+            },
+        )
+        logger.debug(f"Rower r11({r11[1]})")
+
+        r12 = set_key(
             machineId,
             "rec",
             {
                 "value": body["rec"],
             },
         )
-        logger.debug(f"Rower r9({r9[1]})")
+        logger.debug(f"Rower r12({r12[1]})")
 
         # # Increment MET sum
         # r_met_sum = increment_key(
@@ -613,16 +647,19 @@ def rowerUpdateRedis(machineId: str, body: dict):
             "workoutTime": body["workoutTime"],
             "pace": body["pace"],
             "power": body["power"],
+            "rowingTime": body["rowingTime"],
+            "heartRate": body["heartRate"],
+            "interval": body["interval"],
             "rec": body["rec"],
             # "met": body["met"],
         }
 
-        # r10 = xadd(
+        # r13 = xadd(
         #     machineId,
         #     "data_stream",
         #     data,
         # )
-        # logger.debug(f"Rower r10({r10[1]})")
+        # logger.debug(f"Rower r13({r13[1]})")
 
     except Exception as e:
         logger.error(f'Rower", {e}')
@@ -646,8 +683,14 @@ def rowerUpdateRedis(machineId: str, body: dict):
         + str(r8[1])
         + " "
         + str(r9[1])
-        # + " "
-        # + str(r10[1])
+        + " "
+        + str(r10[1])
+        + " "
+        + str(r11[1])
+        + " "
+        + str(r12[1])
+        + " "
+        # + str(r13[1])
         # + " "
         # + str(r_met_sum[1])
         # + " "
@@ -664,7 +707,9 @@ def rowerUpdateRedis(machineId: str, body: dict):
         & (r7[1] == 201)
         & (r8[1] == 201)
         & (r9[1] == 201)
-        # & (r10[1] == 201)
+        & (r10[1] == 201)
+        & (r11[1] == 201)
+        & (r12[1] == 201)
         # & (r_met_sum[1] == 201)
         # & (r_met_instant[1] == 201)
     ):
@@ -705,18 +750,24 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         r6 = set_key(machineId, "workoutTime", {"value": body["workoutTime"]})
         r7 = set_key(machineId, "pace", {"value": body["pace"]})
         r8 = set_key(machineId, "power", {"value": body["power"]})
-        r9 = set_key(machineId, "rec", {"value": body["rec"]})
+        r9 = set_key(machineId, "rowingTime", {"value": body["rowingTime"]})
+        r10 = set_key(machineId, "heartRate", {"value": body["heartRate"]})
+        r11 = set_key(machineId, "interval", {"value": body["interval"]})
+        r12 = set_key(machineId, "rec", {"value": body["rec"]})
 
         data = {
             "distance": body["distance"],
             "cadence": body["cadence"],
             "calories": body["calories"],
             "strokes": body["strokes"],
-            "timestamp": time.time(),
-            #"timestamp": body["timestamp"],
+            # "timestamp": time.time(),
+            "timestamp": body["timestamp"],
             "workoutTime": body["workoutTime"],
             "pace": body["pace"],
             "power": body["power"],
+            "rowingTime": body["rowingTime"],
+            "heartRate": body["heartRate"],
+            "interval": body["interval"],
             "rec": body["rec"],
             
         }
@@ -724,9 +775,9 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         # print(f'data: {data}')
 
         # add to stream for socketio to pick up
-        r10 = xadd(machineId, "data_stream", data)
+        r13 = xadd(machineId, "data_stream", data)
 
-        print(f"Rower r10({r10[1]})")
+        print(f"Rower r13({r13[1]})")
 
     except Exception as e:
         logger.error(f'rowerUpdateRedisFromPostman", {e}')
@@ -755,6 +806,12 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         + " "
         + str(r10[1])
         + " "
+        + str(r11[1])
+        + " "
+        + str(r12[1])
+        + " "
+        + str(r13[1])
+        + " "
     )
 
     print(
@@ -779,6 +836,12 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         + " "
         + str(r10[1])
         + " "
+        + str(r11[1])
+        + " "
+        + str(r12[1])
+        + " "
+        + str(r13[1])
+        + " "
     )
 
     # Make status
@@ -793,6 +856,9 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         & (r8[1] == 201)
         & (r9[1] == 201)
         & (r10[1] == 201)
+        & (r11[1] == 201)
+        & (r12[1] == 201)
+        & (r13[1] == 201)
     ):
         result = {}
         status_code = 201
@@ -875,6 +941,14 @@ def set_key(machineId: str, key: str, body: dict):
     if key == "strokes" and not isinstance(value, float):
         return error_msg, error_code
     if key == "pace" and not isinstance(value, float):
+        return error_msg, error_code
+    if key == "pace" and not isinstance(value, float):
+        return error_msg, error_code
+    if key == "rowingTime" and not isinstance(value, float):
+        return error_msg, error_code
+    if key == "heartRate" and not isinstance(value, float):
+        return error_msg, error_code
+    if key == "interval" and not isinstance(value, float):
         return error_msg, error_code
 
     # Routing

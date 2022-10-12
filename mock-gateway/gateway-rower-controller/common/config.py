@@ -67,7 +67,8 @@ if system == 'Linux':
 
     # Backend configuration
     # server_ip = getEnvVar('SERVER_IP')
-    server_ip = '192.168.1.119'
+    # server_ip = '192.168.1.119'
+    server_ip ='localhost:22090'
 
     # Graylog configuration
     try:

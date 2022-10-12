@@ -64,13 +64,16 @@ class RowerController(abstractworkout.AbsWorkout):
 
                 curr_raw = calculator.JetsonData(
                                     timestamp = msg_dict["timestamp"],
-                                    distance=msg_dict["distance"],
+                                    distance = msg_dict["distance"],
                                     cadence = msg_dict["cadence"],
                                     calories = msg_dict["calories"],
                                     strokes = msg_dict["strokes"],
                                     workoutTime = msg_dict["workoutTime"],
                                     pace = msg_dict["pace"],
                                     power = msg_dict["power"],
+                                    rowingTime = msg_dict["rowingTime"],
+                                    heartRate = msg_dict["heartRate"],
+                                    interval = msg_dict["interval"]
                 )
 
                 loggerWrapper.info(
@@ -83,6 +86,9 @@ class RowerController(abstractworkout.AbsWorkout):
                     f'workoutTime:  {curr_raw.workoutTime}, '
                     f'pace:  {curr_raw.pace}, '
                     f'Power: {curr_raw.power}, '
+                    f'rowingTime: {curr_raw.rowingTime}, '
+                    f'heartRate: {curr_raw.heartRate}, '
+                    f'interval: {curr_raw.interval}, '
                 )
 
                 self.workoutProcessor.updateCurrentValue(curr_raw)

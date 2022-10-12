@@ -33,6 +33,9 @@ class JetsonData:
         workoutTime,
         pace,
         power,
+        rowingTime,
+        interval,
+        heartRate
     ):
         self.timestamp = timestamp
         self.distance = distance
@@ -42,6 +45,9 @@ class JetsonData:
         self.workoutTime = workoutTime
         self.pace = pace
         self.power = power
+        self.rowingTime = rowingTime
+        self.interval = interval
+        self.heartRate = heartRate
 
 
 '''for gateway-processed data'''
@@ -57,6 +63,9 @@ class RowerWorkoutData:
                  timestamp,
                  pace,
                  power,
+                 rowingTime,
+                 interval,
+                 heartRate,
                  rec,
                  ):
         self.distance = distance
@@ -67,6 +76,9 @@ class RowerWorkoutData:
         self.timestamp = timestamp
         self.pace = pace
         self.power = power
+        self.rowingTime = rowingTime
+        self.heartRate =heartRate
+        self.interval = interval
         self.rec = rec          # pedalFlag
 
     # creating a dictionary to append data to list during computation
@@ -80,6 +92,9 @@ class RowerWorkoutData:
                 "timestamp": self.timestamp,
                 "pace":  self.pace,
                 "power":    self.power,
+                "rowingTime": self.rowingTime,
+                "heartRate": self.heartRate,
+                "interval": self.interval,
                 "rec":          self.rec,  # pedalFlag
                 }
 
@@ -181,6 +196,9 @@ class WorkoutProcessor:
                                     workoutTime=self.curr.workoutTime,
                                     pace=self.curr.pace,
                                     power=self.curr.power,
+                                    rowingTime=self.curr.rowingTime,
+                                    heartRate=self.curr.heartRate,
+                                    interval= self.curr.interval,
                                     rec=self.pedalFlag,
                                     timestamp=self.curr.timestamp,
                                     )
@@ -252,6 +270,12 @@ class WorkoutProcessor:
 
                 latest_power   = self.throt_dict["power"]
 
+                latest_rowingTime   = self.throt_dict["rowingTime"]
+
+                latest_heartRate    = self.throt_dict["heartRate"]
+
+                latest_interval = self.throt_dict["interval"]
+
                 latest_rec      = str (self.throt_dict["rec"])   #pedalFlag
 
             '''
@@ -268,6 +292,9 @@ class WorkoutProcessor:
                 "timestamp": latest_timestamp,
                 "pace": latest_pace,
                 "power": latest_power,
+                "rowingTime": latest_rowingTime,
+                "heartRate": latest_heartRate,
+                "interval": latest_interval,
                 "rec": latest_rec,
             }
             print(f'toSendD:\n{toSendD}')

@@ -20,6 +20,9 @@ rower_dict ={
     "workoutTime":float,
     "pace":float,
     "power":float,
+    "rowingTime": float,
+    "heartRate": float,
+    "interval": float,
     "rec":bool,
 }
 

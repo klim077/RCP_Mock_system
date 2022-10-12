@@ -1,11 +1,13 @@
 # from treadmill.src.shared.config import mqtt_port, root_ca
 
+from code import InteractiveConsole
 import paho.mqtt.client as paho
 import ssl
 import time
 import json
 
-mqtt_ip = '192.168.1.119'
+# mqtt_ip = '192.168.1.119'
+mqtt_ip = 'localhost'
 mqtt_port = 31883
 # root_ca = './treadmill/src/certs/root_ca.crt'
 root_ca = 'mock-gateway/work/mosquitto/certs/root_ca.crt'
@@ -55,6 +57,9 @@ class MQTT():
 
     def publish(self, topic, message):
         self.client.publish(topic, message)
+    
+    def subscribe(self, topic):
+        self.client.subscribe(topic)
 
     def on_connect(self, client, userdata, flags, rc):
         self.conn_flag = True
@@ -96,13 +101,35 @@ def main():
             "power": integer+0.1,
             "strokes": integer+0.1,
             "timestamp": integer+0.1,
-            "workoutTime": integer+0.1
+            "workoutTime": integer+0.1,
+            "heartRate": integer+0.1,
+            "rowingTime": integer+0.1,
+            "interval": integer+0.1
+
             }
             message = json.dumps(ret)
             
             mqttClient.publish(topic, message)
             print('Published {message} to {topic}')
+            time.sleep(2)
         mqttClient.stop()
 
 if __name__ == "__main__":
     main()
+
+
+# pace: 500mSplitTime
+# workoutTime
+# rowingTime
+# heartRate
+# interval
+# cadence: strokesperminute
+
+# ADD:
+# heartRate
+# interval
+# rowingTime
+
+
+# workoutTime = total duration since start of workout
+# rowingTime = duration of rowing

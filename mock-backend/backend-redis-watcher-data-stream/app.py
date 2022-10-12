@@ -208,6 +208,7 @@ def publish_to_user(client: redis.Redis, machine: str):
 
     key = redis_user_template(machine=machine)
     logger.info(f'key: {key}')
+    logger.info(f'channel: {client.get(key)}')
 
     client.publish(
         client.get(key),

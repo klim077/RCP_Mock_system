@@ -89,7 +89,8 @@ def submit():
         #     name=PHONEHOLDER_SERVICE_NAME
         # )
         # PHONEHOLDER_SERVICE_PORT = gwConsul.getPort(name=PHONEHOLDER_SERVICE_NAME)
-        PHONEHOLDER_SERVICE_IP = '192.168.1.119'
+        # PHONEHOLDER_SERVICE_IP = '192.168.1.119'
+        PHONEHOLDER_SERVICE_IP = 'localhost'
         PHONEHOLDER_SERVICE_PORT = 16000
 
         # Get details from backend

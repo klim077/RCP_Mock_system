@@ -73,6 +73,8 @@ if system == 'Linux':
     # Backend configuration
     # server_ip = getEnvVar('SERVER_IP', 'smartgym.siotgov.tech')
     server_ip ='192.168.1.119:22090'
+    # server_ip ='localhost:22090'
+    # server_ip = '192.168.1.102:22090'       # MUST BE IP ADDRESS, CANNOT BE 'localhost'
 
     # Graylog configuration
     # graylog_ip = getEnvVar('GRAYLOG_IP', 'graylog.siotgov.tech')
@@ -93,6 +95,8 @@ if system == 'Linux':
     # Gateway IP
     # gateway_ip = getEnvVar('GATEWAY_IP')
     gateway_ip = '192.168.1.119'
+    # gateway_ip = 'localhost'
+    # gateway_ip = '192.168.1.102'            # MUST BE IP ADDRESS, CANNOT BE 'localhost'
 
     # Project name
     # compose_project_name = getEnvVar('COMPOSE_PROJECT_NAME')

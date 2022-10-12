@@ -14,6 +14,9 @@ class RowerWorkout:
         workoutTime,
         pace,
         power,
+        rowingTime,
+        heartRate,
+        interval,
         rec,
     ):
 
@@ -25,6 +28,9 @@ class RowerWorkout:
         self.workoutTime = workoutTime
         self.pace = pace
         self.power = power
+        self.rowingTime = rowingTime
+        self.heartRate = heartRate
+        self.interval = interval
         self.rec = rec
 
 
@@ -39,6 +45,9 @@ class RowerWorkout:
             "workoutTime": self.workoutTime,
             "pace": self.pace,
             "power": self.power,
+            "rowingTime": self.rowingTime,
+            "heartRate": self.heartRate,
+            "interval": self.interval,
             "rec": self.rec,
         }
 
@@ -59,6 +68,9 @@ class WorkoutProcessor:
         self.workoutTime =   float(self.redis_dict["workoutTime"])
         self.pace =          float(self.redis_dict["pace"])
         self.power =         float(self.redis_dict["power"])
+        self.rowingTime =    float(self.redis_dict["rowingTime"])
+        self.heartRate =     float(self.redis_dict["heartRate"])
+        self.interval =      float(self.redis_dict["interval"])
         self.rec =           self.redis_dict["rec"]
 
         print(f'distance: {self.distance}')
@@ -69,6 +81,9 @@ class WorkoutProcessor:
         print(f'workoutTime: {self.workoutTime}')
         print(f'pace: {self.pace}')
         print(f'power: {self.power}')
+        print(f'rowingTime: {self.rowingTime}')
+        print(f'heartRate: {self.heartRate}')
+        print(f'interval: {self.interval}')
         print(f'rec: {self.rec}')
         # print(f'total_speed: {self.total_speed}')
         # print(f'total_cadence: {self.total_cadence}')
@@ -96,6 +111,9 @@ class WorkoutProcessor:
             workoutTime =   self.workoutTime,
             pace =          self.pace,
             power =         self.power,
+            rowingTime =    self.rowingTime,
+            heartRate =     self.heartRate,
+            interval =      self.interval,
             rec =           self.rec,
         )
         logger.info(f'woObj: {self.woObj}')
