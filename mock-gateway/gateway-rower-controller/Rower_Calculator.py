@@ -325,10 +325,12 @@ class WorkoutProcessor:
         return timestamp
 
     def handleNoneValues(self):
-
         attributes = [a for a in dir(self.curr) if not a.startswith('__') and not callable(getattr(self.curr, a))]
         for i in attributes:
             name = i
-            if (getattr(self.curr, name) == None):
+            if (getattr(self.curr, name) == None and self.prev == None):
                 setattr(self.curr, name, 0.00)
+            elif(getattr(self.curr, name) == None and self.prev != None):
+                prevvalue = getattr(self.prev, name)
+                setattr(self.curr, name, prevvalue)
 
