@@ -21,10 +21,10 @@ noPedalThres = 10       # n.o. of no pedal count to set pedalflag false
 delta_cranktime_thres = 5000
 
 ''' for filtering to ensure data spikes are not recorded'''
-distanceFilterThres = 10
-caloriesFilterThres = 10
-strokesFilterThres = 10
-rowingTimeFilterThres = 1000
+distanceFilterThres = 10.0
+caloriesFilterThres = 10.0
+strokesFilterThres = 10.0
+rowingTimeFilterThres = 1000.0
 
 '''for raw data from MQTT without processing'''
 class JetsonData:
@@ -362,11 +362,11 @@ class WorkoutProcessor:
             return False
         
     def filterSpikes(self):
-        if (self.curr.distance - self.prev.distance)>=distanceFilterThres:
+        if ((self.curr.distance - self.prev.distance) >= distanceFilterThres):
             self.curr.distance = self.prev.distance
-        if (self.curr.calories - self.prev.calories)>=caloriesFilterThres:
+        if ((self.curr.calories - self.prev.calories) >= caloriesFilterThres):
             self.curr.calories = self.prev.calories
-        if (self.curr.strokes - self.prev.strokes)>=strokesFilterThres:
+        if ((self.curr.strokes - self.prev.strokes) >= strokesFilterThres):
             self.curr.strokes = self.prev.strokes
 
     def checkIfRestarted(self):
