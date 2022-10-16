@@ -91,21 +91,21 @@ def main():
         # mqttClient.publish(topic, message)
         # print('Published {message} to {topic}')
 
-        for i in range(3,6):
+        for i in range(0,6):
             integer = float(i)
             ret = {
             "cadence": integer+0.1,
-            "calories": integer+0.1,
-            "distance": integer+0.1,
-            "pace": integer+0.1,
-            "power": integer+0.1,
+            "calories": integer+0.2,
+            "distance": integer+0.3,
+            "pace": integer+0.4,
+            "power": integer+0.5,
             "strokes": None,
             # "strokes": integer+0.1,
-            "timestamp": integer+0.1,
-            "workoutTime": integer+0.1,
-            "heartRate": integer+0.1,
+            "timestamp": integer+0.6,
+            "workoutTime": integer+0.7,
+            "heartRate": integer+0.8,
             "rowingTime": integer+3.1,
-            "interval": integer+0.1
+            "interval": integer+0.9
 
             }
             message = json.dumps(ret)

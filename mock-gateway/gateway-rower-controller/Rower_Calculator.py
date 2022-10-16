@@ -310,7 +310,7 @@ class WorkoutProcessor:
             toSendD = {
                 "distance": latest_distance,
                 "cadence": latest_cadence,
-                "calories": latest_cadence,
+                "calories": latest_calories,
                 "strokes": latest_strokes,
                 "workoutTime": latest_workoutTime,
                 "timestamp": latest_timestamp,

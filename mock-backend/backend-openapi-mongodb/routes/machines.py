@@ -552,7 +552,7 @@ def rowerUpdateRedis(machineId: str, body: dict):
         )
         logger.debug(f"Rower r5({r5[1]})")
 
-        r6 = increment_key(
+        r6 = set_key(
             machineId,
             "workoutTime",
             {
