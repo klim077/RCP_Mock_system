@@ -140,7 +140,7 @@ class WorkoutProcessor:
         # Clean self.curr to ensure no None values
         self.handleNoneValues()
 
-        self.checkIfRestarted()
+        # self.checkIfRestarted()
 
         if self.prev is not None:
 
@@ -151,21 +151,21 @@ class WorkoutProcessor:
 
             if (self.repeatflag == True):
                 return None
-            # else: 
-            #     woDict = self.dataComputation()
-            #     self.throt_queue.append(woDict)
-            #     self.prev = copy.deepcopy(self.curr)
-            #     return woDict
-            else:
-                self.sensibleCheck = self.isCurrSensible()
-                if (self.sensibleCheck == False):
-                    return None
-                else:
-                    self.filterSpikes()
-                    woDict = self.dataComputation()
-                    self.throt_queue.append(woDict)
-                    self.prev = copy.deepcopy(self.curr)
-                    return woDict
+            else: 
+                woDict = self.dataComputation()
+                self.throt_queue.append(woDict)
+                self.prev = copy.deepcopy(self.curr)
+                return woDict
+            # else:
+            #     self.sensibleCheck = self.isCurrSensible()
+            #     if (self.sensibleCheck == False):
+            #         return None
+            #     else:
+            #         self.filterSpikes()
+            #         woDict = self.dataComputation()
+            #         self.throt_queue.append(woDict)
+            #         self.prev = copy.deepcopy(self.curr)
+            #         return woDict
 
         else:
             self.prev = copy.deepcopy(self.curr)
@@ -346,30 +346,32 @@ class WorkoutProcessor:
         attributes = [a for a in dir(self.curr) if not a.startswith('__') and not callable(getattr(self.curr, a))]
         for i in attributes:
             name = i
-            if (getattr(self.curr, name) == None and self.prev == None):
-                setattr(self.curr, name, 0.00)
-            elif(getattr(self.curr, name) == None and self.prev != None):
-                prevvalue = getattr(self.prev, name)
-                setattr(self.curr, name, prevvalue)
+            # if (getattr(self.curr, name) == None and self.prev == None):
+            #     setattr(self.curr, name, 0.00)
+            # elif(getattr(self.curr, name) == None and self.prev != None):
+            #     prevvalue = getattr(self.prev, name)
+            #     setattr(self.curr, name, prevvalue)
+            if (getattr(self.curr, name) == None):
+                setattr(self.curr, name, -1.00)
 
-    def isCurrSensible(self):
-        if (self.curr.distance >= self.prev.distance and
-            self.curr.calories >= self.prev.calories and 
-            self.curr.strokes >= self.prev.strokes
-            ):
-            return True
-        else:
-            return False
+    # def isCurrSensible(self):
+    #     if (self.curr.distance >= self.prev.distance and
+    #         self.curr.calories >= self.prev.calories and 
+    #         self.curr.strokes >= self.prev.strokes
+    #         ):
+    #         return True
+    #     else:
+    #         return False
         
-    def filterSpikes(self):
-        if ((self.curr.distance - self.prev.distance) >= distanceFilterThres):
-            self.curr.distance = self.prev.distance
-        if ((self.curr.calories - self.prev.calories) >= caloriesFilterThres):
-            self.curr.calories = self.prev.calories
-        if ((self.curr.strokes - self.prev.strokes) >= strokesFilterThres):
-            self.curr.strokes = self.prev.strokes
+    # def filterSpikes(self):
+    #     if ((self.curr.distance - self.prev.distance) >= distanceFilterThres):
+    #         self.curr.distance = self.prev.distance
+    #     if ((self.curr.calories - self.prev.calories) >= caloriesFilterThres):
+    #         self.curr.calories = self.prev.calories
+    #     if ((self.curr.strokes - self.prev.strokes) >= strokesFilterThres):
+    #         self.curr.strokes = self.prev.strokes
 
-    def checkIfRestarted(self):
-        if ((self.prev !=None) and (self.curr.rowingTime < self.prev.rowingTime)):
-            self.prev = None
+    # def checkIfRestarted(self):
+    #     if ((self.prev !=None) and (self.curr.rowingTime < self.prev.rowingTime)):
+    #         self.prev = None
         

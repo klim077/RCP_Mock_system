@@ -72,7 +72,8 @@ if system == 'Linux':
 
     # Backend configuration
     # server_ip = getEnvVar('SERVER_IP', 'smartgym.siotgov.tech')
-    server_ip ='192.168.1.119:22090'
+    # server_ip ='192.168.1.119:22090'    # NTU Network
+    server_ip = '192.168.5.69:22090'    # GovTech Network
     # server_ip ='localhost:22090'
     # server_ip = '192.168.1.102:22090'       # MUST BE IP ADDRESS, CANNOT BE 'localhost'
 
