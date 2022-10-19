@@ -240,6 +240,7 @@ def initialize_rower_with_user(machineId: str, body: dict):
     r14 = set_key(machineId, "interval", {"value": 0.0})
     r15 = del_key(machineId, "data_stream")
     r16 = set_key(machineId, "type", {"value": "rower"})
+    r17 = set_key(machineId, "isEdge", {"value": 0.0})
     #r_met_sum = set_key(user, machineId, "met_sum", {"value": 0.0})
     #r_met_instant = set_key(user, machineId, "met_instant", {"value": 0.0})
 
@@ -263,6 +264,7 @@ def initialize_rower_with_user(machineId: str, body: dict):
         & (r14[1] == 201)
         & (r15[1] == 201)
         & (r16[1] == 201)
+        & (r17[1] == 201)
         #& (r_met_sum[1] == 201)
         #& (r_met_instant[1] == 201)
     ):
@@ -615,6 +617,15 @@ def rowerUpdateRedis(machineId: str, body: dict):
         )
         logger.debug(f"Rower r12({r12[1]})")
 
+        r13 = set_key(
+            machineId,
+            "isEdge",
+            {
+                "value": body["isEdge"],
+            },
+        )
+        logger.debug(f"Rower r13({r13[1]})")
+
         # # Increment MET sum
         # r_met_sum = increment_key(
         #     user,
@@ -651,6 +662,7 @@ def rowerUpdateRedis(machineId: str, body: dict):
             "heartRate": body["heartRate"],
             "interval": body["interval"],
             "rec": body["rec"],
+            "isEdge": body["isEdge"],
             # "met": body["met"],
         }
 
@@ -690,8 +702,8 @@ def rowerUpdateRedis(machineId: str, body: dict):
         + " "
         + str(r12[1])
         + " "
-        # + str(r13[1])
-        # + " "
+        + str(r13[1])
+        + " "
         # + str(r_met_sum[1])
         # + " "
         # + str(r_met_instant[1])
@@ -710,6 +722,7 @@ def rowerUpdateRedis(machineId: str, body: dict):
         & (r10[1] == 201)
         & (r11[1] == 201)
         & (r12[1] == 201)
+        & (r13[1] == 201)
         # & (r_met_sum[1] == 201)
         # & (r_met_instant[1] == 201)
     ):
@@ -754,6 +767,7 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         r10 = set_key(machineId, "heartRate", {"value": body["heartRate"]})
         r11 = set_key(machineId, "interval", {"value": body["interval"]})
         r12 = set_key(machineId, "rec", {"value": body["rec"]})
+        r13 = set_key(machineId, "isEdge", {"value": body["isEdge"]})
 
         data = {
             "distance": body["distance"],
@@ -769,15 +783,16 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
             "heartRate": body["heartRate"],
             "interval": body["interval"],
             "rec": body["rec"],
+            "isEdge": body["isEdge"],
             
         }
 
         # print(f'data: {data}')
 
         # add to stream for socketio to pick up
-        r13 = xadd(machineId, "data_stream", data)
+        r14 = xadd(machineId, "data_stream", data)
 
-        print(f"Rower r13({r13[1]})")
+        print(f"Rower r14({r14[1]})")
 
     except Exception as e:
         logger.error(f'rowerUpdateRedisFromPostman", {e}')
@@ -812,6 +827,8 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         + " "
         + str(r13[1])
         + " "
+        + str(r14[1])
+        + " "
     )
 
     print(
@@ -842,6 +859,8 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         + " "
         + str(r13[1])
         + " "
+        + str(r14[1])
+        + " "
     )
 
     # Make status
@@ -859,6 +878,7 @@ def rowerUpdateRedisFromPostman(machineId: str, body: dict):
         & (r11[1] == 201)
         & (r12[1] == 201)
         & (r13[1] == 201)
+        & (r14[1] == 201)
     ):
         result = {}
         status_code = 201
@@ -949,6 +969,8 @@ def set_key(machineId: str, key: str, body: dict):
     if key == "heartRate" and not isinstance(value, float):
         return error_msg, error_code
     if key == "interval" and not isinstance(value, float):
+        return error_msg, error_code
+    if key == "isEdge" and not isinstance(value, float):
         return error_msg, error_code
 
     # Routing

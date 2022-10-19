@@ -18,6 +18,7 @@ class RowerWorkout:
         heartRate,
         interval,
         rec,
+        isEdge,
     ):
 
         self.distance = distance
@@ -32,6 +33,7 @@ class RowerWorkout:
         self.heartRate = heartRate
         self.interval = interval
         self.rec = rec
+        self.isEdge = isEdge
 
 
     def to_dict(self):
@@ -49,6 +51,7 @@ class RowerWorkout:
             "heartRate": self.heartRate,
             "interval": self.interval,
             "rec": self.rec,
+            "isEdge": self.isEdge,
         }
 
 class WorkoutProcessor:
@@ -72,6 +75,7 @@ class WorkoutProcessor:
         self.heartRate =     float(self.redis_dict["heartRate"])
         self.interval =      float(self.redis_dict["interval"])
         self.rec =           self.redis_dict["rec"]
+        self.isEdge =        float(self.redis_dict["isEdge"])
 
         print(f'distance: {self.distance}')
         print(f'cadence: {self.cadence}')
@@ -85,6 +89,7 @@ class WorkoutProcessor:
         print(f'heartRate: {self.heartRate}')
         print(f'interval: {self.interval}')
         print(f'rec: {self.rec}')
+        print(f'isEdge: {self.isEdge}')
         # print(f'total_speed: {self.total_speed}')
         # print(f'total_cadence: {self.total_cadence}')
         # print(f'pedal: {self.pedal}')
@@ -115,6 +120,7 @@ class WorkoutProcessor:
             heartRate =     self.heartRate,
             interval =      self.interval,
             rec =           self.rec,
+            isEdge =        self.isEdge,
         )
         logger.info(f'woObj: {self.woObj}')
 

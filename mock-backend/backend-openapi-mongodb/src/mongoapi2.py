@@ -427,6 +427,7 @@ def get_keyvalues(machineId: str):
         "rowingTime",
         "heartRate",
         "interval",
+        "isEdge",
     ]
 
     # Sanitize inputs
@@ -546,6 +547,9 @@ def get_keyvalues(machineId: str):
     if out["interval"] != None:
         out["interval"] = float(out["interval"])
 
+    if out["isEdge"] != None:
+        out["isEdge"] = float(out["isEdge"])
+
     return out
 
 
@@ -657,6 +661,9 @@ def set_key(machineId: str, key: str, body: dict):
         v = float(value)
     if key == "interval":
         k = f"{machineId}:interval"
+        v = float(value)
+    if key == "isEdge":
+        k = f"{machineId}:isEdge"
         v = float(value)
 
     logger.debug(f"{k}, {v}")

@@ -73,7 +73,8 @@ class RowerController(abstractworkout.AbsWorkout):
                                     power = msg_dict["power"],
                                     rowingTime = msg_dict["rowingTime"],
                                     heartRate = msg_dict["heartRate"],
-                                    interval = msg_dict["interval"]
+                                    interval = msg_dict["interval"],
+                                    isEdge = msg_dict["isEdge"]
                 )
 
                 loggerWrapper.info(
@@ -89,6 +90,7 @@ class RowerController(abstractworkout.AbsWorkout):
                     f'rowingTime: {curr_raw.rowingTime}, '
                     f'heartRate: {curr_raw.heartRate}, '
                     f'interval: {curr_raw.interval}, '
+                    f'isEdge: {curr_raw.isEdge}, '
                 )
 
                 self.workoutProcessor.updateCurrentValue(curr_raw)

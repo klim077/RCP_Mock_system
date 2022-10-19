@@ -24,6 +24,7 @@ rower_dict ={
     "heartRate": float,
     "interval": float,
     "rec":bool,
+    "isEdge":float,
 }
 
 # def get_secret(secret_name):

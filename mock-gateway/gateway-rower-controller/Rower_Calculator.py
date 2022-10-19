@@ -41,7 +41,8 @@ class JetsonData:
         power,
         rowingTime,
         interval,
-        heartRate
+        heartRate,
+        isEdge,
     ):
         self.timestamp = timestamp
         self.distance = distance
@@ -54,6 +55,7 @@ class JetsonData:
         self.rowingTime = rowingTime
         self.interval = interval
         self.heartRate = heartRate
+        self.isEdge = isEdge
 
 
 '''for gateway-processed data'''
@@ -73,6 +75,7 @@ class RowerWorkoutData:
                  interval,
                  heartRate,
                  rec,
+                 isEdge,
                  ):
         self.distance = distance
         self.cadence = cadence
@@ -86,6 +89,7 @@ class RowerWorkoutData:
         self.heartRate =heartRate
         self.interval = interval
         self.rec = rec          # pedalFlag
+        self.isEdge = isEdge
 
     # creating a dictionary to append data to list during computation
     def to_dict(self):
@@ -102,6 +106,7 @@ class RowerWorkoutData:
                 "heartRate": self.heartRate,
                 "interval": self.interval,
                 "rec":          self.rec,  # pedalFlag
+                "isEdge":       self.isEdge,
                 }
 
 ''' Actual processor (running and computing)'''
@@ -225,6 +230,7 @@ class WorkoutProcessor:
                                     interval= self.curr.interval,
                                     rec=self.pedalFlag,
                                     timestamp=self.curr.timestamp,
+                                    isEdge=self.curr.isEdge,
                                     )
 
         return self.woDataObj.to_dict()
@@ -301,6 +307,8 @@ class WorkoutProcessor:
                 latest_interval = self.throt_dict["interval"]
 
                 latest_rec      = str (self.throt_dict["rec"])   #pedalFlag
+                
+                latest_isEdge   = self.throt_dict["isEdge"]
 
             '''
             Keys are fixed by endpoint (spinnerUpdateRedis)
@@ -320,6 +328,7 @@ class WorkoutProcessor:
                 "heartRate": latest_heartRate,
                 "interval": latest_interval,
                 "rec": latest_rec,
+                "isEdge": latest_isEdge,
             }
             print(f'toSendD:\n{toSendD}')
 

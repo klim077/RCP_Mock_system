@@ -91,32 +91,35 @@ def main():
         # mqttClient.publish(topic, message)
         # print('Published {message} to {topic}')
 
-        for i in range(0,1):
+        for i in range(0,3):
             integer = float(i)
             ret = {
-            # "cadence": integer,
-            # "calories": integer,
-            # "distance": integer,
-            # "pace": integer,
-            # "power": integer,
-            # "strokes": None,
-            # # "strokes": integer+0.1,
-            # "timestamp": integer,
-            # "workoutTime": integer,
-            # "heartRate": integer,
-            # "rowingTime": integer,
-            # "interval": integer
-            "cadence": None,
-            "calories": None,
-            "distance": None,
-            "pace": None,
-            "power": None,
-            "strokes": 57,
-            "timestamp": None,
-            "workoutTime": None,
-            "heartRate": None,
-            "rowingTime": None,
-            "interval": None
+            "cadence": integer,
+            "calories": integer,
+            "distance": integer,
+            "pace": integer,
+            "power": integer,
+            "strokes": integer,
+            # "strokes": integer+0.1,
+            "timestamp": integer,
+            "workoutTime": integer,
+            "heartRate": integer,
+            "rowingTime": integer,
+            "interval": integer,
+            "isEdge": 1.0,
+
+            # "cadence": None,
+            # "calories": None,
+            # "distance": None,
+            # "pace": None,
+            # "power": None,
+            # "strokes": 57,
+            # "timestamp": None,
+            # "workoutTime": None,
+            # "heartRate": None,
+            # "rowingTime": None,
+            # "interval": None,
+            # "isEdge": 1.0,
 
             }
             message = json.dumps(ret)

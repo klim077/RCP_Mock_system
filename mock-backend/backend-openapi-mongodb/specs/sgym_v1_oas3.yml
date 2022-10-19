@@ -262,6 +262,10 @@ paths:
               - timestamp
               - pace
               - workoutTime
+              - rowingTime
+              - heartRate
+              - interval
+              - isEdge
       requestBody:
         description: Value to set
         content:
@@ -481,6 +485,18 @@ paths:
                   power:
                     type: number
                     format: float
+                  heartRate:
+                    type: number
+                    format: float
+                  rowingTime:
+                    type: number
+                    format: float
+                  interval:
+                    type: number
+                    format: float
+                  isEdge:
+                    type: number
+                    format: float
                   rec:
                     $ref: "#/components/schemas/DefaultString"
                 required:
@@ -493,16 +509,24 @@ paths:
                   - pace
                   - power
                   - rec
+                  - heartRate
+                  - interval
+                  - rowingTime
+                  - isEdge
                 example:
-                  distance: 1.2
-                  cadence: 1.3
-                  calories: 1.4
-                  strokes: 12.3
-                  timestamp: 1.5
-                  workoutTime: 1.6
-                  pace: 12.4
-                  power: 1.7
+                  distance: 1.0
+                  cadence: 2.0
+                  calories: 3.0
+                  strokes: 4.0
+                  timestamp: 5.0
+                  workoutTime: 6.0
+                  pace: 7.0
+                  power: 8.0
                   rec: "false"
+                  heartRate: 9.0
+                  rowingTime: 10.0
+                  interval: 11.0
+                  isEdge: 0
         responses:
           201:
             description: Updated Redis with user exercise information
@@ -564,6 +588,18 @@ paths:
                   power:
                     type: number
                     format: float
+                  heartRate:
+                    type: number
+                    format: float
+                  rowingTime:
+                    type: number
+                    format: float
+                  interval:
+                    type: number
+                    format: float
+                  isEdge:
+                    type: number
+                    format: float
                   rec:
                     $ref: "#/components/schemas/DefaultString"
               required:
@@ -576,6 +612,10 @@ paths:
                 - pace
                 - power
                 - rec
+                - heartRate
+                - interval
+                - rowingTime
+                - isEdge
       responses:
         201:
           description: Postman updated Redis with user exercise information
@@ -810,6 +850,12 @@ components:
         pace:
           type: number
         power:
+          type: number
+        heartRate: 
+          type: number
+        rowingTime:
+          type: number
+        interval:
           type: number
     Gender:
       description: Gender
