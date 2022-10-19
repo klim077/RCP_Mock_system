@@ -2,6 +2,13 @@ from datetime import time
 import numpy as np
 from common import logger
 from rower.model import ParameterQueue
+import copy
+
+''' for filtering to ensure data spikes are not recorded'''
+distanceFilterThres = 10.0
+caloriesFilterThres = 10.0
+strokesFilterThres = 10.0
+rowingTimeFilterThres = 1000.0
 
 class RowerWorkout:
     def __init__(
@@ -57,7 +64,8 @@ class RowerWorkout:
 class WorkoutProcessor:
 
     def __init__(self):
-        pass
+        self.prev = None
+        self.curr = None
 
     def rowerCompute(self, channelData):
 
@@ -107,7 +115,9 @@ class WorkoutProcessor:
         #     self.avg_cadence = self.strokes/self.workoutTime
         #     self.avg_pace = (self.workoutTime/self.distance)*500
 
-        self.woObj = RowerWorkout(
+        # if (self.isEdge == 0.0):
+
+        self.curr = RowerWorkout(
             distance =      self.distance,
             cadence =       self.cadence,
             calories =      self.calories,
@@ -122,7 +132,67 @@ class WorkoutProcessor:
             rec =           self.rec,
             isEdge =        self.isEdge,
         )
+        
+        # Check if isEdge is 0.0
+        # If 0.0, self.prev = None
+        if (self.curr.isEdge == 0.0):
+            self.prev = None
+
+        # Computation
+        if self.prev is not None:
+            # Change -1 values to previous values or 0.0 if no previous
+            self.handleNoneValues()
+            # Check if distance, calories and strokes are increasing
+            self.isCurrSensible()
+            # Check if distance, calories and strokes are spiking
+            self.filterSpikes()
+            self.prev = copy.deepcopy(self.curr)
+            self.woObj = self.curr.to_dict()
+        else:
+            # self.handleNoneValues()
+            attributes = [a for a in dir(self.curr) if not a.startswith('__') and not callable(getattr(self.curr, a))]
+            for i in attributes:
+                name = i
+                if (getattr(self.curr, name) == -1.0):
+                    setattr(self.curr, name, 0.0)
+            self.prev = copy.deepcopy(self.curr)
+            self.woObj = None
+            
+
+        
         logger.info(f'woObj: {self.woObj}')
 
-        return self.woObj.to_dict()
+        return self.woObj
+
+    def handleNoneValues(self):
+        attributes = [a for a in dir(self.curr) if not a.startswith('__') and not callable(getattr(self.curr, a))]
+        for i in attributes:
+            name = i
+            if (getattr(self.curr, name) == -1.0 and getattr(self.prev, name) == 0.0):
+                setattr(self.curr, name, 0.0)
+            elif(getattr(self.curr, name) == -1.0 and getattr(self.prev, name) != 0.0):
+                prevvalue = getattr(self.prev, name)
+                setattr(self.curr, name, prevvalue)
+            elif (getattr(self.curr, name) == -1.0 and getattr(self.prev, name) == -1.0):
+                setattr(self.curr, name, 0.0)
+            elif (getattr(self.curr, name) == -1.0):
+                setattr(self.curr, name, 0.0)
+
+    
+    def isCurrSensible(self):
+        if (self.curr.distance >= self.prev.distance and
+            self.curr.calories >= self.prev.calories and 
+            self.curr.strokes >= self.prev.strokes
+            ):
+            return True
+        else:
+            return False
+        
+    def filterSpikes(self):
+        if ((self.curr.distance - self.prev.distance) >= distanceFilterThres):
+            self.curr.distance = self.prev.distance
+        if ((self.curr.calories - self.prev.calories) >= caloriesFilterThres):
+            self.curr.calories = self.prev.calories
+        if ((self.curr.strokes - self.prev.strokes) >= strokesFilterThres):
+            self.curr.strokes = self.prev.strokes   
 

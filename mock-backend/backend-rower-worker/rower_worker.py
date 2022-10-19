@@ -60,9 +60,10 @@ def rowerComputation(machineId):
         if isinstance(channelData, dict):
             rower_workout = rower.rowerCompute(channelData)
             logger.info(f'rower_workout: {rower_workout}')
-            res = rowerUpdateRedisFromPostman(machineId["machineId"], rower_workout)
-            # logger.info(f'Update Redis enpoint call, result: {res}')
-            logger.info(f'rower_workout: {rower_workout}')
+            if (rower_workout is not None):
+                res = rowerUpdateRedisFromPostman(machineId["machineId"], rower_workout)
+                # logger.info(f'Update Redis enpoint call, result: {res}')
+                logger.info(f'rower_workout: {rower_workout}')
 
     except Exception as e:
 

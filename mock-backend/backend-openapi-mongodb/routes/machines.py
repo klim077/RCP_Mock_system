@@ -270,6 +270,7 @@ def initialize_rower_with_user(machineId: str, body: dict):
     ):
         result = {}
         status_code = 201
+        mongoapi2.dispatch_rower(machineId)
     else:
         result = {}
         status_code = 400
